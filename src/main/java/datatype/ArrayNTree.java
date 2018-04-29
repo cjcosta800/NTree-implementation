@@ -14,9 +14,9 @@ import java.lang.reflect.Array;
 public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 
 	private T data;
-	private ArrayNTree<T>[] children;     // exemplo do array a usar
-	
-	// podem incluir outros atributos
+	private ArrayNTree<T>[] children;	// children of the particular node
+	@SuppressWarnings("unused")
+	private int nodeCap;				// capacity of node set
 	
 	/////////////////////////////////////
 
@@ -26,10 +26,8 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayNTree(int capacity) {
-		// TODO
-		
-        // exemplo de como se constroi o array de arvores
-		this.children  = (ArrayNTree<T>[])Array.newInstance(ArrayNTree.class, capacity);
+		this.nodeCap = capacity;
+		this.children = (ArrayNTree<T>[])Array.newInstance(ArrayNTree.class, capacity);
 	}
 
 	/**
@@ -37,8 +35,11 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 	 * @param elem     The element value
 	 * @param capacity The capacity of each node, ie, the maximum number of direct successors
 	 */
+	@SuppressWarnings("unchecked")
 	public ArrayNTree(T elem, int capacity) {
-		// TODO
+		this.data = elem;
+		this.nodeCap = capacity;
+		this.children = (ArrayNTree<T>[])Array.newInstance(ArrayNTree.class, capacity);
 	}
 
 	/**
@@ -46,8 +47,16 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 	 * @param elem     The list with all the elements to insert
 	 * @param capacity The capacity of each node, ie, the maximum number of direct successors
 	 */
+	@SuppressWarnings("unchecked")
 	public ArrayNTree(List<T> list, int capacity) {
-		// TODO
+		this.nodeCap = capacity;
+		this.children = (ArrayNTree<T>[])Array.newInstance(ArrayNTree.class, capacity);
+		
+		// insertion of elements of list to the tree
+		T[] listArray = (T[]) list.toArray();
+		for (T elem : listArray)
+			insert(elem);
+			
 	}
 
 	/////////////////////////////////////
