@@ -1,8 +1,8 @@
-# Projeto de grupo AED
-Trabalho final da cadeira AED da FCUL. Projeto sobre NTrees.
+# AED Group Project (NTree implementation)
+Final project for AED (Algorithms and Data Structures) module in the Faculty of Sciences of the University of Lisbon. Projeto sobre NTrees.
 
-## Autores
-* [Ulisses Ferreira](https://github.com/ulissesferreira) - 49430
-* [César Sousa](https://github.com/cesarmcsousa) - 51038
-* [Gonçalo Medeiros](https://github.com/goncalomedeiros) - 51093
+## Authors
+* [Ulisses Ferreira](https://github.com/ulissesferreira)
+* [César Sousa](https://github.com/cesarmcsousa)
+* [Gonçalo Medeiros](https://github.com/goncalomedeiros)
 
