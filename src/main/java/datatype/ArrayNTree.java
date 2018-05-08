@@ -15,7 +15,6 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 
 	private T data;
 	private ArrayNTree<T>[] children;	// children of the particular node
-	@SuppressWarnings("unused")
 	private int nodeCap;				// capacity of node set
 	
 	/////////////////////////////////////
@@ -126,9 +125,8 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 	 * Is this tree equal to another object?
 	 * Two NTrees are equal iff they have the same values
 	 */
-	@SuppressWarnings("unchecked")
 	public boolean equals(Object other) {
-		return false;  // TODO
+		return false;	// TODO
 	}
 
 	/////////////////////////////////////
@@ -143,7 +141,21 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 	 * @returns a new tree with the same elements of this
 	 */
 	public ArrayNTree<T> clone() {
-		return null;  // TODO
+		
+		// If current instance is empty
+		// use (int) constructor
+		if (this.isEmpty())
+			return new ArrayNTree<T>(this.nodeCap);
+		
+		// If current instance only contains its own
+		// element use (T, int) constructor
+		if (this.data != null)
+			return new ArrayNTree<T>(this.data, this.nodeCap);
+		
+		// TODO
+		// In other cases create new
+		// instance and add the elements recursively
+		return null;
 	}
 
 	/////////////////////////////////////
