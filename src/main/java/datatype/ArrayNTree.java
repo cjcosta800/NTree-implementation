@@ -61,6 +61,12 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 
 	/////////////////////////////////////
 
+	/**
+	 * Returns whether or not the tree is empty
+	 * @return true if empty and false if not
+	 * @best_case	O(1)
+	 * @worst_case	O(1)
+	 */
 	public boolean isEmpty() {
 		return this.data == null;
 	}
@@ -163,9 +169,9 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 		if (this.isEmpty())
 			return new ArrayNTree<T>(this.nodeCap);
 		
-		// If current instance only contains its own
-		// element use (T, int) constructor
-		if (this.data != null)
+		// If current instance is a leaf
+		// use (T, int) constructor
+		if (this.isLeaf())
 			return new ArrayNTree<T>(this.data, this.nodeCap);
 		
 		// TODO
