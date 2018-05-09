@@ -150,7 +150,15 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	 * Two NTrees are equal iff they have the same values
 	 */
 	public boolean equals(Object other) {
-		return false;	// TODO
+		
+		Iterator<T> itThis = this.iterator();
+		Iterator<T> itOther = ((NTree<T>) other).iterator();
+		
+		while (itThis.hasNext() && itOther.hasNext())
+			if (!itThis.next().equals(itOther.next()))
+				return false;
+		
+		return true;	// TODO
 	}
 
 	/////////////////////////////////////
