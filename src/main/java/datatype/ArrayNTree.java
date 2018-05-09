@@ -11,7 +11,7 @@ import java.lang.reflect.Array;
  * @author 51093 Goncalo Medeiros
  *  
  */
-public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
+public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T> {
 
 	private T data;
 	private ArrayNTree<T>[] children;	// children of the particular node
@@ -128,11 +128,13 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 	/////////////////////////////////////
 
 	public void insert(T elem) {
-		if (!this.contains(elem))
-			System.out.println("NEEDS DOING");;
-			// ...........
-			// ...........
-		// TODO
+		//If element doesn't exist we can add it
+		//Otherwise do nothing
+		//
+		if (!this.contains(elem)) {
+			System.out.println("Inserting");
+			
+		}
 	}
 
 	/////////////////////////////////////
@@ -208,7 +210,30 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 
 	@Override
 	public Iterator<T> iterator() {
-		return null;  // TODO
+		return new NTreeIterator();  // TODO
+	}
+	
+	
+	private class NTreeIterator implements Iterator<T> {
+
+		private T hello;
+		
+		private NTreeIterator() {
+
+		}
+		
+		public boolean hasNext() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		
+		public T next() {
+			// TODO Auto-generated method stub
+			return this.hello;
+		}
+		
+		
 	}
 
 }
