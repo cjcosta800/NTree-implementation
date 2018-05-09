@@ -95,8 +95,11 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	/////////////////////////////////////
 
 	public int countLeaves() {
-		return -1;  // TODO
-
+		int output = isLeaf() ? 1 : 0;
+		for (ArrayNTree<T> child : children) {
+			output += child.countLeaves();
+		}
+		return output;  // TODO
 	}
 
 	/////////////////////////////////////
