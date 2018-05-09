@@ -52,22 +52,34 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 		this.children = (ArrayNTree<T>[])Array.newInstance(ArrayNTree.class, capacity);
 		
 		// insertion of elements of list to the tree
+		// TODO
 		T[] listArray = (T[]) list.toArray();
 		for (T elem : listArray)
-			insert(elem);
+			this.insert(elem);
 			
 	}
 
 	/////////////////////////////////////
 
 	public boolean isEmpty() {
-		return false;  // TODO
+		return this.data == null;
 	}
 
 	/////////////////////////////////////
 
 	public boolean isLeaf() {
-		return false;  // TODO
+		// if tree is empty
+		if (this.isEmpty())
+			return false;
+		// for each child ...
+		for (ArrayNTree<T> c : this.children)
+			// ... check if empty
+			if (!c.isEmpty())
+				return false;
+		
+		// if neither of the previous
+		// it is a leaf
+		return true;
 	}
 
 	/////////////////////////////////////
@@ -92,7 +104,7 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 	/////////////////////////////////////
 
 	public T min() {
-		return null;  // TODO
+		return this.data;
 	}
 
 	/////////////////////////////////////
@@ -110,6 +122,10 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 	/////////////////////////////////////
 
 	public void insert(T elem) {
+		if (!this.contains(elem))
+			System.out.println("NEEDS DOING");;
+			// ...........
+			// ...........
 		// TODO
 	}
 
