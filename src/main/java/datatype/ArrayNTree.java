@@ -122,11 +122,13 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T> {
 	/////////////////////////////////////
 
 	public void insert(T elem) {
-		if (!this.contains(elem))
-			System.out.println("NEEDS DOING");;
-			// ...........
-			// ...........
-		// TODO
+		//If element doesn't exist we can add it
+		//Otherwise do nothing
+		//
+		if (!this.contains(elem)) {
+			System.out.println("Inserting");
+			
+		}
 	}
 
 	/////////////////////////////////////
