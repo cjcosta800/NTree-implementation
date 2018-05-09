@@ -91,14 +91,21 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	/////////////////////////////////////
 
 	public int size() {
-		return -1;  // TODO
+		int output = 1;
+		for (ArrayNTree<T> child : children){
+			output += child.size();
+		};
+		return output;  // TODO
 	}
 
 	/////////////////////////////////////
 
 	public int countLeaves() {
-		return -1;  // TODO
-
+		int output = isLeaf() ? 1 : 0;
+		for (ArrayNTree<T> child : children) {
+			output += child.countLeaves();
+		}
+		return output;  // TODO
 	}
 
 	/////////////////////////////////////
@@ -132,8 +139,11 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 		//Otherwise do nothing
 		//
 		if (!this.contains(elem)) {
-			System.out.println("Inserting");
-			
+			if (elem.compareTo(data) < 0) {
+				//elem é abaixo de data
+			} else {
+				//elem é maior que data
+			}
 		}
 	}
 
@@ -164,7 +174,15 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	/////////////////////////////////////
 
 	public List<T> toList() {
-		return null;  // TODO
+		//Depois de conseguirmos criar uma arvore,
+		//testar
+		//
+		List<T> newList = null;
+		newList.add(data);
+		for (ArrayNTree<T> child : children){
+			newList.addAll(child.toList());
+		};
+		return newList;  // TODO
 	}
 
 	/////////////////////////////////////
@@ -215,30 +233,51 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	}
 
 	/////////////////////////////////////
+	
+	
+	
+	//// New ////
+	
+	public T getData () {
+		return data;
+	}
+	
+	//// End of New ////
 
 	@Override
 	public Iterator<T> iterator() {
-		return new NTreeIterator();  // TODO
+		return new NTreeIterator(data, children);  // TODO
 	}
 	
 	
 	private class NTreeIterator implements Iterator<T> {
 
-		private T hello;
+		private T dataLocal;
+		private ArrayNTree<T>[] children;
+		private int index;
 		
-		private NTreeIterator() {
-
+		private NTreeIterator(T itData, ArrayNTree<T>[] itChildren) {
+			dataLocal = itData;
+			children = itChildren;
+			index = -1;
 		}
 		
 		public boolean hasNext() {
 			// TODO Auto-generated method stub
-			return false;
+			return index == children.length;
 		}
 
 		
 		public T next() {
-			// TODO Auto-generated method stub
-			return this.hello;
+			if (index == -1) {
+				index += 1;
+				return dataLocal;
+			} else {
+				index += 1;
+				return children[index--].data;
+			}
+				
+			
 		}
 		
 		
