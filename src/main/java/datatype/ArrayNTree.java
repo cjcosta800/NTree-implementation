@@ -133,8 +133,11 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 		//Otherwise do nothing
 		//
 		if (!this.contains(elem)) {
-			System.out.println("Inserting");
-			
+			if (elem.compareTo(data) < 0) {
+				//elem é abaixo de data
+			} else {
+				//elem é maior que data
+			}
 		}
 	}
 
