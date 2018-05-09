@@ -85,7 +85,11 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	/////////////////////////////////////
 
 	public int size() {
-		return -1;  // TODO
+		int output = 1;
+		for (ArrayNTree<T> child : children){
+			output += child.size();
+		};
+		return output;  // TODO
 	}
 
 	/////////////////////////////////////
@@ -209,6 +213,16 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	}
 
 	/////////////////////////////////////
+	
+	
+	
+	//// New ////
+	
+	public T getData () {
+		return data;
+	}
+	
+	//// End of New ////
 
 	@Override
 	public Iterator<T> iterator() {
