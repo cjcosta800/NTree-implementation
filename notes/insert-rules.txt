@@ -11,3 +11,21 @@
 		for ( 0 -> Tree.children.length)
 			printRecursive ( Tree.children[actual] )
 	}
+
+Insert
+
+Se elem for menor que a raiz
+
+-> Inicializar o elem como raiz. A antiga raiz vai para a esquerda
+dos seus children ao seja é inserida na arvore
+
+Adicionar em espaço livre e maior que a raiz
+
+-> Só se pode colocar E no vetor da raiz se o maior dos filhos do
+elemento anterior for menor que E
+
+-> Caso o elemento E seja maior que o max dos filhos vai para
+filho do array mais à direita
+
+Se já estiver cheio, e o elemento E for menor que o maior do filhos
+então esse maior dor filhos para a ser filho de E
