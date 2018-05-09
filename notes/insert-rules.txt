@@ -1,0 +1,13 @@
+#######################
+### Insertion rules ###
+#######################
+
+/*   & other stuff   */
+
+1)
+
+	recursiveSearch ( Tree ) {
+		find  Tree.element
+		for ( 0 -> Tree.children.length)
+			printRecursive ( Tree.children[actual] )
+	}
