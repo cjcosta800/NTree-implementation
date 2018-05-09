@@ -150,7 +150,15 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	/////////////////////////////////////
 
 	public List<T> toList() {
-		return null;  // TODO
+		//Depois de conseguirmos criar uma arvore,
+		//testar
+		//
+		List<T> newList = null;
+		newList.add(data);
+		for (ArrayNTree<T> child : children){
+			newList.addAll(child.toList());
+		};
+		return newList;  // TODO
 	}
 
 	/////////////////////////////////////
@@ -204,27 +212,38 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 
 	@Override
 	public Iterator<T> iterator() {
-		return new NTreeIterator();  // TODO
+		return new NTreeIterator(data, children);  // TODO
 	}
 	
 	
 	private class NTreeIterator implements Iterator<T> {
 
-		private T hello;
+		private T dataLocal;
+		private ArrayNTree<T>[] children;
+		private int index;
 		
-		private NTreeIterator() {
-
+		private NTreeIterator(T itData, ArrayNTree<T>[] itChildren) {
+			dataLocal = itData;
+			children = itChildren;
+			index = -1;
 		}
 		
 		public boolean hasNext() {
 			// TODO Auto-generated method stub
-			return false;
+			return index == children.length;
 		}
 
 		
 		public T next() {
-			// TODO Auto-generated method stub
-			return this.hello;
+			if (index == -1) {
+				index += 1;
+				return dataLocal;
+			} else {
+				index += 1;
+				return children[index--].data;
+			}
+				
+			
 		}
 		
 		
