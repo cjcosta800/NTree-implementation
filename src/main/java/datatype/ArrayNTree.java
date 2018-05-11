@@ -77,35 +77,68 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 		// if tree is empty
 		if (this.isEmpty())
 			return false;
+		
 		// for each child ...
 		for (ArrayNTree<T> c : this.children)
 			// ... check if empty
 			if (!c.isEmpty())
 				return false;
 		
-		// if neither of the previous
-		// it is a leaf
+		// if neither of the previous then it is a leaf
 		return true;
 	}
 
 	/////////////////////////////////////
 
 	public int size() {
+		if (this.isEmpty())
+			return 0;
+		return sizeAux();
+		
+		/*
 		int output = 1;
 		for (ArrayNTree<T> child : children){
 			output += child.size();
 		};
 		return output;  // TODO
+		*/
+	}
+	
+	private int sizeAux() {
+		int size = 1;
+		
+		// counter for the while loop
+		int c = 0;
+		
+		// as long as the next child isn't null ...
+		while (this.children[c] != null)
+			// ... count that child and add any further children, then add them
+			size += this.children[c].sizeAux();
+		return size;
 	}
 
 	/////////////////////////////////////
 
+	/**
+	 * 
+	 */
 	public int countLeaves() {
-		int output = isLeaf() ? 1 : 0;
-		for (ArrayNTree<T> child : children) {
-			output += child.countLeaves();
-		}
-		return output;  // TODO
+		// if this is a leaf then add up
+		if (this.isLeaf())
+			return 1;
+		
+		// initialises tree's leaves as 0
+		int leaves = 0;
+		
+		// counter for the while loop
+		int c = 0;
+		
+		// as long as the next child isn't null ...
+		while (this.children[c] != null)
+			// ... count that child's leaves and add them
+			leaves += this.children[c].countLeaves();
+		
+		return leaves;
 	}
 
 	/////////////////////////////////////
@@ -135,19 +168,25 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	/////////////////////////////////////
 
 	public void insert(T elem) {
-		//If element doesn't exist we can add it
-		//Otherwise do nothing
-		//
-		if (!this.contains(elem)) {
-			if (elem.compareTo(data) < 0) {
-				//elem é abaixo de data
-			} else {
-				//elem é maior que data
+		// as long as elem doesn't already exist in the tree ...
+		/*if (!this.contains(elem)) {
+			
+			// Rule 1: if elem is smaller than this.data (main root) ...
+			if (elem.compareTo(this.root) < 0) 
+				smallerThanRoot(elem);
+			
+			else {
+				if ()
 			}
-		}
+		}*/
 	}
 
 	/////////////////////////////////////
+
+	private void smallerThanRoot(T elem) {
+		// TODO Auto-generated method stub
+		
+	}
 
 	public void delete(T elem) {
 		// TODO
@@ -239,7 +278,7 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	//// New ////
 	
 	public T getData () {
-		return data;
+		return this.data;
 	}
 	
 	//// End of New ////
