@@ -1,6 +1,7 @@
 package main.java.datatype;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.lang.reflect.Array;
 
 /**
@@ -78,10 +79,14 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 		if (this.isEmpty())
 			return false;
 		
+		// counter for the while loop that will search through the children
+		int c = 0;
+		
 		// for each child ...
-		for (ArrayNTree<T> c : this.children)
-			// ... check if empty
-			if (!c.isEmpty())
+		while (this.children[c] != null)
+			// ... check if empty ...
+			if (this.children[c].isEmpty())
+				// ... and if so then it is NOT a leave
 				return false;
 		
 		// if neither of the previous then it is a leaf
@@ -90,20 +95,31 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 
 	/////////////////////////////////////
 
+	/**
+	 * Finds the size of the tree
+	 */
 	public int size() {
-		if (this.isEmpty())
-			return 0;
-		return sizeAux();
+		// the following two cases are here for performance's sake
+		// thus saving the effort of calling the recursive function
 		
-		/*
-		int output = 1;
-		for (ArrayNTree<T> child : children){
-			output += child.size();
-		};
-		return output;  // TODO
-		*/
+		// if the tree is empty ...
+		if (this.isEmpty())
+			// ... then it's size is 0
+			return 0;
+		
+		// if the tree is itself a leaf ...
+		if (this.isLeaf())
+			// ... then it's size is 1
+			return 1;
+		
+		// if not then return the recursive function to find the size
+		return sizeAux();
 	}
 	
+	/**
+	 * Recursive function to find the size of the tree
+	 * @return
+	 */
 	private int sizeAux() {
 		int size = 1;
 		
@@ -156,7 +172,18 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	/////////////////////////////////////
 
 	public T max() {
-		return null;  // TODO
+		// created an instance of the iterator
+		Iterator<T> it = this.iterator();
+		// variable to hold the value of the last element in the iterator
+		T max;
+		
+		// while there's a next element in the iterator ...
+		while (it.hasNext())
+			// ... change max to such element
+			max = it.next();
+		
+		// returns the last element of the iterator
+		return max;
 	}
 
 	/////////////////////////////////////
@@ -199,35 +226,48 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	 * Two NTrees are equal iff they have the same values
 	 */
 	public boolean equals(Object other) {
-		
+		// iterator for the current instance
 		Iterator<T> itThis = this.iterator();
+		// iterator for Object other (cast as an NTree)
 		Iterator<T> itOther = ((NTree<T>) other).iterator();
 		
+		// while both iterators have a next element ...
 		while (itThis.hasNext() && itOther.hasNext())
+			// ... check if such elements are equal ...
 			if (!itThis.next().equals(itOther.next()))
+				// ... and if they do then they're NOT EQUAL
 				return false;
 		
+		// if either iterators still have a next element ...
+		if (itThis.hasNext() || itOther.hasNext())
+			// ... then they're NOT EQUAL
+			return false;
+		
+		// if neither of the conditions have applied, then they're EQUAL
 		return true;	// TODO
 	}
 
 	/////////////////////////////////////
 
 	public List<T> toList() {
-		//Depois de conseguirmos criar uma arvore,
-		//testar
-		//
-		List<T> newList = null;
-		newList.add(data);
-		for (ArrayNTree<T> child : children){
-			newList.addAll(child.toList());
-		};
-		return newList;  // TODO
+		// List where the elements will be stored in order
+		List<T> l = new LinkedList<>();
+		// Iterator for reading the tree
+		Iterator<T> it = this.iterator();
+		
+		// while the iterator has a next element ...
+		while (it.hasNext())
+			// ... add its element to the list
+			l.add(it.next());
+		
+		// return the list
+		return l;
 	}
 
 	/////////////////////////////////////
 
 	/**
-	 * @returns a new tree with the same elements of this
+	 * @returns a new tree with the same elements as the current instance
 	 */
 	public ArrayNTree<T> clone() {
 		
@@ -285,40 +325,51 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 
 	@Override
 	public Iterator<T> iterator() {
-		return new NTreeIterator(data, children);  // TODO
+		return new NTreeIterator(this);
 	}
 	
 	
+	/**
+	 * Iterator for the ArrayNTree class
+	 * 
+	 *
+	 */
 	private class NTreeIterator implements Iterator<T> {
 
-		private T dataLocal;
-		private ArrayNTree<T>[] children;
-		private int index;
+		private Queue<ArrayNTree<T>> deque = new ConcurrentLinkedQueue<>();
 		
-		private NTreeIterator(T itData, ArrayNTree<T>[] itChildren) {
-			dataLocal = itData;
-			children = itChildren;
-			index = -1;
+		private NTreeIterator(ArrayNTree<T> root) {
+			queueFill(root);
+		}
+		
+		/**
+		 * Recursively adds the elements of the tree in an in-order fashion
+		 * @param tree Tree from which we get the next element to add
+		 */
+		private void queueFill(ArrayNTree<T> tree) {
+			// adds the element to the tree
+			this.deque.add(tree);
+			
+			// as long as the next child isn't null ...
+			for (int c = 0; c < children.length && tree.children[c] != null; c++)
+				// ... count that child and add any further children, then add them
+				queueFill(tree.children[c]);
 		}
 		
 		public boolean hasNext() {
-			// TODO Auto-generated method stub
-			return index == children.length;
+			// if the queue isn't empty, then it has a next element
+			return !deque.isEmpty();
 		}
 
 		
-		public T next() {
-			if (index == -1) {
-				index += 1;
-				return dataLocal;
-			} else {
-				index += 1;
-				return children[index--].data;
-			}
+		public T next() throws NoSuchElementException {
+			// if there is a next element ...
+			if (hasNext()) 
+				// ... poll it from the 
+				return this.deque.poll().data;
 				
-			
+			throw new NoSuchElementException();
 		}
-		
 		
 	}
 
