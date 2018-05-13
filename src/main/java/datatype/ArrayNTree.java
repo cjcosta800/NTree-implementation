@@ -24,7 +24,6 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	 * Creates an empty tree 
 	 * @param capacity The capacity of each node, ie, the maximum number of direct successors
 	 */
-	@SuppressWarnings("unchecked")
 	public ArrayNTree(int capacity) {
 		this.nodeCap = capacity;
 		this.children = (ArrayNTree<T>[])Array.newInstance(ArrayNTree.class, capacity);
@@ -35,7 +34,6 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	 * @param elem     The element value
 	 * @param capacity The capacity of each node, ie, the maximum number of direct successors
 	 */
-	@SuppressWarnings("unchecked")
 	public ArrayNTree(T elem, int capacity) {
 		this.data = elem;
 		this.nodeCap = capacity;
@@ -47,7 +45,6 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	 * @param elem     The list with all the elements to insert
 	 * @param capacity The capacity of each node, ie, the maximum number of direct successors
 	 */
-	@SuppressWarnings("unchecked")
 	public ArrayNTree(List<T> list, int capacity) {
 		this.nodeCap = capacity;
 		this.children = (ArrayNTree<T>[])Array.newInstance(ArrayNTree.class, capacity);
@@ -69,28 +66,38 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	 * @worst_case	O(1)
 	 */
 	public boolean isEmpty() {
+		// *NOTE*	if this.data is null it means that either the first
+		//			constructor was used and no element has been added
+		//			or that every element has been removed, therefore
+		//			being empty
+		
+		// if this.data is null, then the tree is empty
 		return this.data == null;
 	}
 
 	/////////////////////////////////////
 
+	/**
+	 * Returns whether or not this instance is a leaf
+	 * @return true if it is a leaf and false if not
+	 * @best_case	O(1), if the tree is empty or not a 
+	 * @worst_case	O(n), if the
+	 */
 	public boolean isLeaf() {
 		// if tree is empty
 		if (this.isEmpty())
 			return false;
 		
-		// counter for the while loop that will search through the children
-		int c = 0;
+		// *NOTE*	the children are placed left to right, therefore there's no need
+		//			to be checking every child because if the first is null then the
+		//			following should be as well
 		
-		// for each child ...
-		while (this.children[c] != null)
-			// ... check if empty ...
-			if (this.children[c].isEmpty())
-				// ... and if so then it is NOT a leave
-				return false;
+		// if the tree's first child is null then it is a leaf
+		if (this.children[0] == null)
+			return true; 
 		
-		// if neither of the previous then it is a leaf
-		return true;
+		// if neither of the previous then it is NOT a leaf
+		return false;
 	}
 
 	/////////////////////////////////////
@@ -99,8 +106,9 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	 * Finds the size of the tree
 	 */
 	public int size() {
-		// the following two cases are here for performance's sake
-		// thus saving the effort of calling the recursive function
+		
+		// *NOTE*	the following two cases are here for performance's sake,
+		//			thus saving the effort of calling the recursive function
 		
 		// if the tree is empty ...
 		if (this.isEmpty())
@@ -123,11 +131,11 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	private int sizeAux() {
 		int size = 1;
 		
-		// counter for the while loop
-		int c = 0;
-		
-		// as long as the next child isn't null ...
-		while (this.children[c] != null)
+		// as long as ...
+		//				Condition 1			 &&		Condition 2
+		//				c is a valid index			if the child is null 
+		//				for children				then we break the cicle
+		for (int c = 0; c < this.children.length && this.children[c] != null; c++)
 			// ... count that child and add any further children, then add them
 			size += this.children[c].sizeAux();
 		return size;
@@ -160,7 +168,18 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	/////////////////////////////////////
 
 	public int height() {
-		return -1;  // TODO
+		if (this.isEmpty())
+			return 0;
+		
+		if (this.isLeaf())
+			return 1;
+		
+		return heightAux();
+	}
+
+	private int heightAux() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	/////////////////////////////////////
@@ -175,7 +194,7 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 		// created an instance of the iterator
 		Iterator<T> it = this.iterator();
 		// variable to hold the value of the last element in the iterator
-		T max;
+		T max = this.data;
 		
 		// while there's a next element in the iterator ...
 		while (it.hasNext())
@@ -189,31 +208,79 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	/////////////////////////////////////
 
 	public boolean contains(T elem) {
+		Iterator<T> it = this.iterator();
+		
+		while (it.hasNext())
+			if (it.next().compareTo(elem) == 0)
+				return true;
+		
 		return false;  // TODO
 	}
 
 	/////////////////////////////////////
 
 	public void insert(T elem) {
-		// as long as elem doesn't already exist in the tree ...
-		/*if (!this.contains(elem)) {
-			
-			// Rule 1: if elem is smaller than this.data (main root) ...
-			if (elem.compareTo(this.root) < 0) 
-				smallerThanRoot(elem);
-			
-			else {
-				if ()
-			}
-		}*/
+
+		// if the tree already contains elem
+		if (this.contains(elem))
+			return;
+		
+		// if the tree is empty change current tree's data to elem
+		else if (this.isEmpty())
+			this.data = elem;
+		
+		// if the element is smaller than the tree's current data
+		else if (elem.compareTo(this.data) < 0)
+			insertUpwards(elem);
+		
+		// if the current tree has space in its children and
+		// they don't have any offspring that exceeds elem
+		else if (this.hasSpace())
+			insertAtSameLevel(elem);
+		
+		// if the current tree has no space in its children then
+		else insertDownwards(elem);
+
 	}
 
-	/////////////////////////////////////
 
-	private void smallerThanRoot(T elem) {
+	private void insertDownwards(T elem) {
 		// TODO Auto-generated method stub
 		
 	}
+
+	private boolean hasSpace() {
+		// for each child in this.children ...
+		for (int c = 1; c < this.children.length; c++)
+			// ... if any child is null ...
+			if (this.children[c] == null)
+				// ... then there is space
+				return true;
+		
+		// if no child was null then there is no space
+		return false;
+	}
+
+	private void insertAtSameLevel(T elem) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void insertUpwards(T elem) {
+		insertUpwardsRec(this);
+		this.data = elem;
+	}
+
+	
+	private void insertUpwardsRec(ArrayNTree<T> tree) {
+		// if the tree is not a leaf ...
+		if (!tree.isLeaf())
+			// ... then call the function again, this time inserting its child bellow it
+			tree.children[0].insertUpwardsRec(tree.children[0]);
+		tree.children[0].data = tree.data;
+	}
+
+	/////////////////////////////////////
 
 	public void delete(T elem) {
 		// TODO
@@ -234,7 +301,7 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 		// while both iterators have a next element ...
 		while (itThis.hasNext() && itOther.hasNext())
 			// ... check if such elements are equal ...
-			if (!itThis.next().equals(itOther.next()))
+			if (!(itThis.next().compareTo(itOther.next()) == 0))
 				// ... and if they do then they're NOT EQUAL
 				return false;
 		
@@ -244,7 +311,7 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 			return false;
 		
 		// if neither of the conditions have applied, then they're EQUAL
-		return true;	// TODO
+		return true;
 	}
 
 	/////////////////////////////////////
@@ -284,7 +351,7 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 		// TODO
 		// In other cases create new
 		// instance and add the elements recursively
-		return null;
+		return new ArrayNTree<T>(this.toList(), this.nodeCap);
 	}
 
 	/////////////////////////////////////
@@ -365,9 +432,10 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 		public T next() throws NoSuchElementException {
 			// if there is a next element ...
 			if (hasNext()) 
-				// ... poll it from the 
+				// ... poll it from the deque
 				return this.deque.poll().data;
 				
+			// throws NoSuchElementException if no next element exists
 			throw new NoSuchElementException();
 		}
 		

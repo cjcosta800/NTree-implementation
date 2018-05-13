@@ -1,31 +1,54 @@
-#######################
-### Insertion rules ###
-#######################
+ #######################
+ ### Insertion rules ###
+ #######################
 
-/*   & other stuff   */
+	NOTE:
+	The upwards/same-level/downwards insertions are only methods here due
+	to organisation reasons. They should be part of the regular insert
+	as to not occupy as much of the call stack.
 
-1)
 
-	recursiveSearch ( Tree ) {
-		find  Tree.element
-		for ( 0 -> Tree.children.length)
-			printRecursive ( Tree.children[actual] )
+	////////////////////////
+
+	*insert* (T element) {
+
+	if 
+
+	else if the tree is empty:
+		change current element's data to element
+
+	else if the element is smaller than the tree's current data:
+		call *upwards-insert*
+
+	else if the tree has space:
+		call *same-level-insert*
+
+	else
+		call *downwards-insert*
 	}
 
-Insert
 
-Se elem for menor que a raiz
+	////////////////////////
 
--> Inicializar o elem como raiz. A antiga raiz vai para a esquerda
-dos seus children ao seja é inserida na arvore
+	*upwards-insert* {
+		change current tree's data to element
+		change every first child of this tree's data to its parent
+	}
 
-Adicionar em espaço livre e maior que a raiz
 
--> Só se pode colocar E no vetor da raiz se o maior dos filhos do
-elemento anterior for menor que E
+	////////////////////////
 
--> Caso o elemento E seja maior que o max dos filhos vai para
-filho do array mais à direita
+	*same-level-insert* {
 
-Se já estiver cheio, e o elemento E for menor que o maior do filhos
-então esse maior dor filhos para a ser filho de E
+	}
+
+
+	////////////////////////
+
+	*downwards-insert* {
+
+	}
+
+
+
+	/////// Option 2 ///////
