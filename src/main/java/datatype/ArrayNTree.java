@@ -239,13 +239,24 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 			insertAsChild(elem);
 		
 		// if the current tree has no space in its children then
-		else insertDownwards(elem);
+		else insertInChild(elem);
 
 	}
 
 
-	private void insertDownwards(T elem) {
-		// TODO Auto-generated method stub
+	private void insertInChild(T elem) {
+		for (int i = 0; i < this.children.length; i++) {
+			if (children[i].isLeaf()) {
+				children[i].insertAsChild(elem);
+				return;
+			}
+				
+				
+			if (children[i + 1].data.compareTo(elem) > 0) {
+				children[i].insert(elem);
+				return;
+			}
+		}
 		
 	}
 
@@ -262,10 +273,13 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	}
 
 	private void insertAsChild(T elem) {
+		// for each child ...
 		for (int i = 0; i < this.children.length; i++)
+			// check if it is
 			if (elem.compareTo(this.children[i].data) > 0) {
-				this.shiftChildren(i);
+				this.shiftChildrenOnceFrom(i+1);
 				this.children[i] = new ArrayNTree<T>(elem, this.nodeCap);
+				break;
 			}
 		
 	}
@@ -274,13 +288,13 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	 * Shifts children right from index
 	 * @param i
 	 */
-	private void shiftChildren(int index) {
-		// MAKE THIS RECURSIVE
+	private void shiftChildrenOnceFrom(int index) {
+		// if the child is not null ...
+		if (this.children[index].data != null)
+			// ... shift the next child
+			shiftChildrenOnceFrom(index + 1);
+		this.children[index + 1] = this.children[index];
 		
-		/*
-		for (int i = index + 1; i < this.children.length && this.children[i] != null; i++)
-			this.children[i+1]
-		*/
 		
 	}
 
