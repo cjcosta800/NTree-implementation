@@ -236,7 +236,7 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 		// if the current tree has space in its children and
 		// they don't have any offspring that exceeds elem
 		else if (this.hasSpace())
-			insertAtSameLevel(elem);
+			insertAsChild(elem);
 		
 		// if the current tree has no space in its children then
 		else insertDownwards(elem);
@@ -261,8 +261,26 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 		return false;
 	}
 
-	private void insertAtSameLevel(T elem) {
-		// TODO Auto-generated method stub
+	private void insertAsChild(T elem) {
+		for (int i = 0; i < this.children.length; i++)
+			if (elem.compareTo(this.children[i].data) > 0) {
+				this.shiftChildren(i);
+				this.children[i] = new ArrayNTree<T>(elem, this.nodeCap);
+			}
+		
+	}
+
+	/**
+	 * Shifts children right from index
+	 * @param i
+	 */
+	private void shiftChildren(int index) {
+		// MAKE THIS RECURSIVE
+		
+		/*
+		for (int i = index + 1; i < this.children.length && this.children[i] != null; i++)
+			this.children[i+1]
+		*/
 		
 	}
 

@@ -52,3 +52,14 @@
 
 
 	/////// Option 2 ///////
+
+	*insert* (elem) {
+
+		Create iterator
+		Run through iterator until
+			find first element > elem (top)
+			find last element < elem (bottom)
+
+		
+
+	}
