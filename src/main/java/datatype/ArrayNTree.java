@@ -24,9 +24,10 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	 * Creates an empty tree 
 	 * @param capacity The capacity of each node, ie, the maximum number of direct successors
 	 */
-	public ArrayNTree(int capacity) {
+	// Inicializar array vazio e definir a capacidade
+	public ArrayNTree(int capacity) { 
 		this.nodeCap = capacity;
-		this.children = (ArrayNTree<T>[])Array.newInstance(ArrayNTree.class, capacity);
+		this.children = (ArrayNTree<T>[]) Array.newInstance(ArrayNTree.class, capacity);
 	}
 
 	/**
@@ -34,6 +35,8 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	 * @param elem     The element value
 	 * @param capacity The capacity of each node, ie, the maximum number of direct successors
 	 */
+	// Inicializar array vazio, definir a capacidade e 
+	// definir o elemento
 	public ArrayNTree(T elem, int capacity) {
 		this.data = elem;
 		this.nodeCap = capacity;
@@ -45,14 +48,15 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	 * @param elem     The list with all the elements to insert
 	 * @param capacity The capacity of each node, ie, the maximum number of direct successors
 	 */
+	// Inicializar o array vazio, definir a capacidade e
+	// para cada elemento da lista fazer um insert
 	public ArrayNTree(List<T> list, int capacity) {
 		this.nodeCap = capacity;
 		this.children = (ArrayNTree<T>[])Array.newInstance(ArrayNTree.class, capacity);
 		
 		// insertion of elements of list to the tree
 		// TODO
-		T[] listArray = (T[]) list.toArray();
-		for (T elem : listArray)
+		for (T elem : list)
 			this.insert(elem);
 			
 	}
@@ -111,6 +115,8 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 		//			thus saving the effort of calling the recursive function
 		
 		// if the tree is empty ...
+		int size = 1;
+		
 		if (this.isEmpty())
 			// ... then it's size is 0
 			return 0;
@@ -121,24 +127,12 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 			return 1;
 		
 		// if not then return the recursive function to find the size
-		return sizeAux();
-	}
-	
-	/**
-	 * Recursive function to find the size of the tree
-	 * @return
-	 */
-	private int sizeAux() {
-		int size = 1;
+		for (ArrayNTree<T> child : this.children) {
+			size += child.size();
+		}
 		
-		// as long as ...
-		//				Condition 1			 &&		Condition 2
-		//				c is a valid index			if the child is null 
-		//				for children				then we break the cicle
-		for (int c = 0; c < this.children.length && this.children[c] != null; c++)
-			// ... count that child and add any further children, then add them
-			size += this.children[c].sizeAux();
 		return size;
+		//return sizeAux();
 	}
 
 	/////////////////////////////////////
@@ -209,6 +203,8 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 
 	public boolean contains(T elem) {
 		Iterator<T> it = this.iterator();
+		
+		System.out.println(it.next());
 		
 		while (it.hasNext())
 			if (it.next().compareTo(elem) == 0)
