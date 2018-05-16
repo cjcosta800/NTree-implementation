@@ -2,6 +2,7 @@ package main.java.datatype;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.io.Console;
 import java.lang.reflect.Array;
 
 /**
@@ -56,6 +57,8 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 		
 		// insertion of elements of list to the tree
 		// TODO
+		
+//		
 		for (T elem : list)
 			this.insert(elem);
 			
@@ -127,9 +130,8 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 			return 1;
 		
 		// if not then return the recursive function to find the size
-		for (ArrayNTree<T> child : this.children) {
-			size += child.size();
-		}
+		for (int i = 0; i < this.nodeCap && this.children[i] != null; i++)
+			size += this.children[i].size();
 		
 		return size;
 		//return sizeAux();
@@ -202,14 +204,14 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	/////////////////////////////////////
 
 	public boolean contains(T elem) {
-		Iterator<T> it = this.iterator();
-		
-		System.out.println(it.next());
-		
-		while (it.hasNext())
-			if (it.next().compareTo(elem) == 0)
-				return true;
-		
+//		Iterator<T> it = this.iterator();
+//		
+//		System.out.println(it.next());
+//		
+//		while (it.hasNext())
+//			if (it.next().compareTo(elem) == 0)
+//				return true;
+//		
 		return false;  // TODO
 	}
 
@@ -267,18 +269,31 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 		// if no child was null then there is no space
 		return false;
 	}
+	
+	private void addToChildren(T elem) {
+		this.children[0] = new ArrayNTree<T>(elem, this.nodeCap);
+	}
 
 	private void insertAsChild(T elem) {
-		// for each child ...
-		for (int i = 0; i < this.children.length; i++)
-			// check if it is
-			if (elem.compareTo(this.children[i].data) > 0) {
-				this.shiftChildrenOnceFrom(i+1);
-				this.children[i] = new ArrayNTree<T>(elem, this.nodeCap);
-				break;
+//		for (int i = 0; i < this.nodeCap && this.children[i] != null; i++)
+		System.out.println(this.children);
+		
+		if (this.children[0] == null) {
+			this.children[0] = new ArrayNTree<T>(elem, this.nodeCap);
+		} else {
+			for (int i = 0; i < this.nodeCap - 1 && this.children[i] != null; i++) {
+				if (this.children[i+1] == null)
+					this.children[i+1] = new ArrayNTree<T>(elem, this.nodeCap);
 			}
+		}
+			
+		this.sortChildren();
 		
 	}
+	
+//	private void setData (T data) {
+//		this.data = data;
+//	}
 
 	/**
 	 * Shifts children right from index
@@ -417,6 +432,34 @@ public class ArrayNTree<T extends Comparable<T>> implements NTree<T>, Iterable<T
 	}
 	
 	//// End of New ////
+	
+	public void sortChildren () {
+		//Está em this.children o que queremos sort
+		//Elementos null inclusive
+		
+		int numChild = 0;
+		for (ArrayNTree<T> child : this.children)
+			if (child != null)
+				numChild  ++;
+		if (numChild > 1)
+		for (int i = this.nodeCap - 1; i > 0; i--) {
+			boolean swapped = false;
+			for (int j = 0; j < i; j++) {
+					if (!this.children[j + 1].isEmpty()) {
+						if (this.children[j].data.compareTo(this.children[j + 1].data) > 0) {
+							ArrayNTree<T> temp = this.children[j];
+							this.children[j] = this.children[j + 1];
+							this.children[j + 1] = temp;
+							swapped = true;
+						}
+					}
+			}
+			if (!swapped) {
+				return;
+			}
+		}
+		
+	}
 
 	@Override
 	public Iterator<T> iterator() {
